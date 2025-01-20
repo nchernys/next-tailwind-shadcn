@@ -200,7 +200,7 @@ export default function Home() {
           </div>
           <div className="w-6/12 justify-evenly hidden  md:flex">
             {menuItems.map((item, i) => (
-              <div className="relative">
+              <div className="relative" key={i}>
                 <div
                   className="text-white cursor-pointer"
                   onClick={() => handleOpenMenu(i)}
@@ -214,12 +214,12 @@ export default function Home() {
                   )}
                 >
                   {item.options.map((option, index) => (
-                    <>
+                    <div key={index}>
                       <div className="text-blue-500 hover:bg-blue-400 hover:text-white text-sm py-4 px-4 cursor-pointer">
                         {option}
                       </div>
                       {index < item.options.length - 1 && <Separator />}
-                    </>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -281,7 +281,10 @@ export default function Home() {
       </div>
       <section className="w-full relative">
         {aboutUs.map((about, index) => (
-          <section className="w-full py-10 md:py-20 px-0 sm:p-16 md:px-3 lg:px-4 h-auto grid grid-cols-1 md:grid-cols-2 lg:gap-2 place-items-center relative">
+          <section
+            key={index}
+            className="w-full py-10 md:py-20 px-0 sm:p-16 md:px-3 lg:px-4 h-auto grid grid-cols-1 md:grid-cols-2 lg:gap-2 place-items-center relative"
+          >
             <img
               className="absolute opacity-10 -z-5 w-full h-80 top-44 pointer-events-auto"
               src="/images/deco-3.svg"
@@ -416,9 +419,10 @@ export default function Home() {
                         <div className="absolute z-10 flex overflow-hidden">
                           {Array.from({ length: 5 }).map((_, index) => (
                             <img
+                              key={index}
                               className="w-[1.5rem] h-[1.5rem] relative"
                               src="/images/starIcon.svg"
-                              alt=""
+                              alt="rating-stars"
                             />
                           ))}
                         </div>
@@ -449,8 +453,9 @@ export default function Home() {
           Have Questions?
         </h1>
         <section className="w-full py-16 px-2">
-          {QAs.map((set) => (
+          {QAs.map((set, index) => (
             <Accordion
+              key={index}
               type="single"
               className="w-full mx-auto bg-wtite"
               collapsible
