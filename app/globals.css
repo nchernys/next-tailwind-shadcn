@@ -72,6 +72,46 @@ html, body {
   font-size: 16px;
 }
 
+.hero-h1-font-size {
+  font-size: calc(2.5rem + 1vw);
+}
+
+@media screen and (min-width: 420px) {
+  .hero-h1-font-size {
+    font-size: calc(3rem + 2.5vw);
+  }
+}
+
+@media screen and (min-width: 676px) {
+  .hero-h1-font-size {
+    font-size: calc(2.5rem + 1vw);
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .hero-h1-font-size {
+    font-size: calc(2.6rem + 1.8vw);
+  }
+}
+
+@media screen and (min-width: 1300px) {
+  .hero-h1-font-size {
+    font-size: calc(2.8rem + 2vw);
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  html, body {
+    font-size: 20px;
+  }
+}
+
+@media screen and (min-width: 1800px) {
+  html, body {
+    font-size: 22px;
+  }
+}
+
 /* Hide scrollbars but allow scrolling */
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */

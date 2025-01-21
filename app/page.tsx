@@ -13,15 +13,34 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFacebook,
+  faTwitter,
+  faInstagram,
+} from "@fortawesome/free-brands-svg-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import React, { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
+import { supabase } from "../lib/supabaseClient";
 
 const menuItems = [
   {
@@ -154,11 +173,34 @@ const QAs = [
       "Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra.",
   },
 ];
+
+const contactForm = [
+  {
+    name: "firstName",
+    label: "First Name",
+    type: "text",
+    placeholder: "Enter your first name",
+  },
+  {
+    name: "lastName",
+    label: "Last Name",
+    type: "text",
+    placeholder: "Enter your last name",
+  },
+  {
+    name: "message",
+    label: "Message",
+    type: "textarea",
+    placeholder: "Enter your message",
+  },
+];
+
 export default function Home() {
   const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean[]>(
     Array(menuItems.length).fill(false)
   );
+  const [openMobileMenu, setOpenMobileMenu] = useState<boolean>(false);
 
   const handleSwitchChange = (checked: boolean) => {
     setIsSwitchOn(checked);
@@ -169,6 +211,49 @@ export default function Home() {
   const handleOpenMenu = (index: number): void => {
     setIsOpen((prev) => prev.map((open, i) => (i === index ? !open : false)));
   };
+
+  const handleOpenMobile = () => {
+    setOpenMobileMenu(!openMobileMenu);
+    console.log(openMobileMenu);
+  };
+
+  const formSchema = z.object({
+    firstName: z.string().min(2, {
+      message: "First name must be at least 2 characters.",
+    }),
+    lastName: z.string().min(2, {
+      message: "Last name must be at least 2 characters.",
+    }),
+    message: z.string().min(2, {
+      message: "Message be at least 2 characters.",
+    }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      message: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+
+    const response = await fetch("/api/submit-contact-form", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
+
+    if (response.ok) {
+      console.log("Form submitted successfully");
+      form.reset();
+    } else {
+      console.log("Error submitting form");
+    }
+  }
 
   return (
     <>
@@ -210,23 +295,50 @@ export default function Home() {
             ))}
           </div>
           <div className="w-3/12 text-white hidden md:flex justify-end ">
-            <span>+ 1 (212) 123-4567</span>
+            <span>(212) 123-4567</span>
             <img
               className="w-6 text-white ms-5"
               src="/images/emailIcon.svg"
               alt="Email"
             />
           </div>
-          <div className="w-1/12 flex md:hidden">
-            <img className="w-12" src="/images/mobileMenuIcon.svg" alt="" />
+          <div className="w-1/12 flex md:hidden" onClick={handleOpenMobile}>
+            {openMobileMenu ? (
+              <img
+                className="w-12"
+                src="/images/closeMobileMenu.svg"
+                alt="close-mobile-menu"
+              />
+            ) : (
+              <img
+                className="w-12"
+                src="/images/mobileMenuIcon.svg"
+                alt="open-mobile-menu"
+              />
+            )}
           </div>
+          {openMobileMenu && (
+            <div className="w-10/12 sm:w-6/12 text-xl shadow-2xl absolute top-16 right-6 rounded-lg z-10 bg-white p-4">
+              <ul>
+                {menuItems.map((menu) => (
+                  <>
+                    <li className="p-4 font-bold">{menu.trigger}</li>
+                    <ul>
+                      {menu.options.map((option) => (
+                        <li className="p-4 hover:bg-blue-100">{option}</li>
+                      ))}
+                    </ul>
+                  </>
+                ))}
+              </ul>
+            </div>
+          )}
         </nav>
-        <section className="w-full pt-2 pb-8 px-8 grid grid-cols-1 md:grid-cols-2 place-items-center relative">
-          <div className="w-full text-white order-2 md:order-1">
-            <h1
-              className="leading-none text-opacity-90 font-semibold md:leading-snug"
-              style={{ fontSize: "calc(2.5rem + 3vw)" }}
-            >
+
+        {/* HERO SECTION */}
+        <section className="w-full pt-2 pb-16 px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 place-items-center relative">
+          <div className="w-full text-white order-2 2xs:px-8 md:order-1">
+            <h1 className="hero-h1-font-size leading-none text-opacity-90 font-semibold md:leading-tight">
               Lorem Ipsum Dolor Set Amet
             </h1>
             <h3
@@ -262,7 +374,10 @@ export default function Home() {
             />
           </div>
         </section>
+
+        {/* END HERO SECTION */}
       </div>
+
       <section className="w-full relative">
         {aboutUs.map((about, index) => (
           <section
@@ -330,7 +445,7 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 place-items-center gap-12 lg:grid-cols-3 lg:gap-0 lg:place-items-start">
+        <div className="grid grid-cols-1 place-items-center gap-12 lg:grid-cols-3 lg:gap-0 lg:place-items-center">
           {selectPlans.map((plan, index) => (
             <Card
               key={index}
@@ -427,7 +542,76 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <section className="w-full px-2 md:px-12 text-center relative grid grid-cols-1 md:grid-cols-[50%_50%] place-items-start">
+      {/* FORM  */}
+      <section className="w-full pt-8 pb-32">
+        <h1 className="w-full text-5xl font-bold pb-32  text-center relative">
+          <img
+            className="absolute opacity-10 -z-10 w-full h-80 -top-24"
+            src="/images/deco-3.svg"
+            alt="background-decoration"
+          />
+          Contact Us
+        </h1>
+        <div className="w-full grid grid-cols-1 md:grid-cols-2">
+          <div className="w-full min-h-86 sm:max-h-[35rem] overfolow-hidden">
+            <img
+              className="w-full h-full object-cover object-center"
+              src="/images/img12.jpg"
+              alt=""
+            />
+          </div>
+
+          <div className="bg-blue-500  py-16 px-8">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
+                {contactForm.map((inputField) => (
+                  <FormField
+                    key={inputField.name}
+                    control={form.control}
+                    name={inputField.name}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">
+                          {inputField.label}
+                        </FormLabel>
+                        <FormControl>
+                          {inputField.type === "textarea" ? (
+                            <textarea
+                              className="border box-border border-gray-300 resize-none rounded-md w-full px-3 py-2"
+                              placeholder={inputField.placeholder}
+                              {...field}
+                            />
+                          ) : (
+                            <Input
+                              type={inputField.type}
+                              placeholder={inputField.placeholder}
+                              {...field}
+                            />
+                          )}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+                <Button
+                  variant="ghost"
+                  className="bg-slate-800 text-white h-12 w-32 text-base"
+                  type="submit"
+                >
+                  Submit
+                </Button>
+              </form>
+            </Form>
+          </div>
+        </div>
+      </section>
+      {/* END FORM */}
+
+      <section className="w-full px-2 pb-16 md:px-12 text-center relative grid grid-cols-1 md:grid-cols-[50%_50%] place-items-start">
         <img
           className="absolute -z-10 opacity-10 w-full h-96 left-0 -top-40"
           src="/images/deco-3.svg"
@@ -463,7 +647,70 @@ export default function Home() {
           ))}
         </section>
       </section>
-      <section className="w-full py-16"></section>
+      <section className="w-full p-8 px-8 text-sm grid grid-cols-1 gap-10 md:gap-0 md:grid-cols-[20%_80%]  text-white bg-blue-500 ">
+        <div className="">
+          <ul className="space-y-5">
+            <li className="w-full h-full">
+              <img className="w-10" src="/images/logo.svg" alt="Logo" />
+            </li>
+            <li className="flex space-x-4">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon
+                  icon={faFacebook}
+                  className="text-white  text-xl"
+                />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon
+                  icon={faTwitter}
+                  className="text-white  text-xl"
+                />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon
+                  icon={faInstagram}
+                  className="text-white text-xl"
+                />
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div className="flex justify-start sm:justify-between flex-wrap gap-10 md:flex-row">
+          {menuItems.map((menu) => (
+            <ul>
+              <li className="font-bold py-2">{menu.trigger}</li>
+              <ul>
+                {menu.options.map((option) => (
+                  <li className="py-2">{option}</li>
+                ))}
+              </ul>
+            </ul>
+          ))}
+
+          <ul>
+            <li className="font-bold py-2">Address</li>
+            <li className="py-2">123 Street Str</li>
+            <li className="py-2">City, AZ 12345</li>
+          </ul>
+          <ul>
+            <li className="font-bold py-2">Contact Us</li>
+            <li className="py-2">(212) 123-4567</li>
+            <li className="py-2">info@emample.com</li>
+          </ul>
+        </div>
+      </section>
     </>
   );
 }
