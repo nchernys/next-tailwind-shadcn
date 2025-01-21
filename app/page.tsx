@@ -16,7 +16,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -40,7 +39,6 @@ import { z } from "zod";
 import React, { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import { supabase } from "../lib/supabaseClient";
 
 const menuItems = [
   {
@@ -174,7 +172,26 @@ const QAs = [
   },
 ];
 
-const contactForm = [
+const formSchema = z.object({
+  firstName: z.string().min(2, {
+    message: "First name must be at least 2 characters.",
+  }),
+  lastName: z.string().min(2, {
+    message: "Last name must be at least 2 characters.",
+  }),
+  message: z.string().min(2, {
+    message: "Message be at least 2 characters.",
+  }),
+});
+
+type ContactFormField = {
+  name: keyof z.infer<typeof formSchema>;
+  label: string;
+  type: "text" | "textarea";
+  placeholder?: string;
+};
+
+const contactForm: ContactFormField[] = [
   {
     name: "firstName",
     label: "First Name",
@@ -216,18 +233,6 @@ export default function Home() {
     setOpenMobileMenu(!openMobileMenu);
     console.log(openMobileMenu);
   };
-
-  const formSchema = z.object({
-    firstName: z.string().min(2, {
-      message: "First name must be at least 2 characters.",
-    }),
-    lastName: z.string().min(2, {
-      message: "Last name must be at least 2 characters.",
-    }),
-    message: z.string().min(2, {
-      message: "Message be at least 2 characters.",
-    }),
-  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -324,8 +329,10 @@ export default function Home() {
                   <>
                     <li className="p-4 font-bold">{menu.trigger}</li>
                     <ul>
-                      {menu.options.map((option) => (
-                        <li className="p-4 hover:bg-blue-100">{option}</li>
+                      {menu.options.map((option, index) => (
+                        <li key={index} className="p-4 hover:bg-blue-100">
+                          {option}
+                        </li>
                       ))}
                     </ul>
                   </>
@@ -571,8 +578,19 @@ export default function Home() {
                   <FormField
                     key={inputField.name}
                     control={form.control}
-                    name={inputField.name}
-                    render={({ field }) => (
+                    name={inputField.name as keyof z.infer<typeof formSchema>}
+                    render={({
+                      field,
+                    }: {
+                      field: {
+                        onChange: (
+                          event: React.ChangeEvent<
+                            HTMLInputElement | HTMLTextAreaElement
+                          >
+                        ) => void; // Handle both input and textarea
+                        value: string; // Assuming value is a string (update as needed for other types)
+                      };
+                    }) => (
                       <FormItem>
                         <FormLabel className="text-white">
                           {inputField.label}
@@ -688,12 +706,14 @@ export default function Home() {
           </ul>
         </div>
         <div className="flex justify-start sm:justify-between flex-wrap gap-10 md:flex-row">
-          {menuItems.map((menu) => (
-            <ul>
+          {menuItems.map((menu, index) => (
+            <ul key={index}>
               <li className="font-bold py-2">{menu.trigger}</li>
               <ul>
-                {menu.options.map((option) => (
-                  <li className="py-2">{option}</li>
+                {menu.options.map((option, i) => (
+                  <li key={i} className="py-2">
+                    {option}
+                  </li>
                 ))}
               </ul>
             </ul>
