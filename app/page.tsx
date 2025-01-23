@@ -36,9 +36,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import clsx from "clsx";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 const menuItems = [
   {
@@ -219,6 +222,69 @@ export default function Home() {
   );
   const [openMobileMenu, setOpenMobileMenu] = useState<boolean>(false);
 
+  useEffect(() => {
+    const elements = gsap.utils.toArray(".animate") as HTMLElement[];
+
+    // Animate each `.animate` container
+    elements.forEach((element) => {
+      gsap.fromTo(
+        element,
+        { opacity: 0, y: 80 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          scrollTrigger: {
+            trigger: element,
+            start: "top 60%",
+            end: "top 20%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // Animate `.animate-list` elements inside each `.animate` container with stagger
+      const plans = element.querySelectorAll(".animate-plan");
+      gsap.fromTo(
+        plans,
+        { opacity: 0, x: 50 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1,
+          ease: "power2.out",
+          stagger: 0.5,
+          delay: 0.5,
+          scrollTrigger: {
+            trigger: element,
+            start: "top 80%",
+            end: "top 20%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+      const testimonials = element.querySelectorAll(".animate-testimonial");
+      gsap.fromTo(
+        testimonials,
+        { opacity: 0, x: 80 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1,
+          stagger: 0.5,
+          ease: "power2.out",
+          delay: 1,
+          scrollTrigger: {
+            trigger: element,
+            start: "top 80%",
+            end: "top 20%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    });
+  }, []);
+
   const handleSwitchChange = (checked: boolean) => {
     setIsSwitchOn(checked);
     console.log(isSwitchOn);
@@ -389,7 +455,7 @@ export default function Home() {
         {aboutUs.map((about, index) => (
           <section
             key={index}
-            className="w-full py-10 md:py-20 px-0 sm:p-16 md:px-3 lg:px-4 h-auto grid grid-cols-1 md:grid-cols-2 lg:gap-2 place-items-center relative"
+            className="animate w-full py-10 md:py-20 px-0 sm:p-16 md:px-3 lg:px-4 h-auto grid grid-cols-1 md:grid-cols-2 lg:gap-2 place-items-center relative"
           >
             <img
               className="absolute opacity-10 -z-5 w-full h-80 top-44 pointer-events-auto"
@@ -424,7 +490,7 @@ export default function Home() {
           </section>
         ))}
       </section>
-      <section className="w-full py-20 px-3 sm:px-8 md:px-16 text-slate-800">
+      <section className="animate w-full py-20 px-3 sm:px-8 md:px-16 text-slate-800">
         <h1 className="w-full text-5xl font-bold pb-16 text-center">
           Choose a Plan
         </h1>
@@ -457,7 +523,7 @@ export default function Home() {
             <Card
               key={index}
               className={clsx(
-                "w-12/12 sm:w-10/12 h-full text-white flex flex-col justify-center md:justify-between md:p-3",
+                "animate-plan w-12/12 sm:w-10/12 h-full text-white flex flex-col justify-center md:justify-between md:p-3",
                 index === 1
                   ? "bg-slate-800 md:scale-105 md:shadow-2xl"
                   : "bg-blue-500"
@@ -493,7 +559,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <section className="py-32 text-slate-800">
+      <section className="animate py-32 text-slate-800">
         <h1 className="w-full text-5xl font-bold pb-32  text-center relative">
           <img
             className="absolute opacity-10 -z-10 w-full h-80 -top-24"
@@ -507,7 +573,7 @@ export default function Home() {
           {testimonialsCards.map((card, index) => (
             <Card
               key={index}
-              className="w-12/12 md:w-[20rem] md:flex-shrink-0 shadow-2xl  flex flex-col justify-center sm:justify-between md:p-2"
+              className="animate-testimonial w-12/12 md:w-[20rem] md:flex-shrink-0 shadow-2xl  flex flex-col justify-center sm:justify-between md:p-2"
             >
               <CardHeader className="mb-5">
                 <CardTitle className="mb-8">
@@ -544,13 +610,12 @@ export default function Home() {
               <CardContent className="text-lg font-bold mb-2 py-0">
                 <p>{card.name}</p>
               </CardContent>
-              <CardFooter></CardFooter>
             </Card>
           ))}
         </div>
       </section>
       {/* FORM  */}
-      <section className="w-full pt-8 pb-32">
+      <section className="animate w-full pt-8 pb-32">
         <h1 className="w-full text-5xl font-bold pb-32  text-center relative">
           <img
             className="absolute opacity-10 -z-10 w-full h-80 -top-24"
@@ -559,16 +624,8 @@ export default function Home() {
           />
           Contact Us
         </h1>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2">
-          <div className="w-full min-h-86 sm:max-h-[35rem] overfolow-hidden">
-            <img
-              className="w-full h-full object-cover object-center"
-              src="/images/img12.jpg"
-              alt=""
-            />
-          </div>
-
-          <div className="bg-blue-500  py-16 px-8">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 px-8 place-content-center">
+          <div className=" order-2 md:order-1 mt-16 md:mt-0 flex flex-col justify-center px-8">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -592,20 +649,19 @@ export default function Home() {
                       };
                     }) => (
                       <FormItem>
-                        <FormLabel className="text-white">
+                        <FormLabel className="text-blue-500 text-md font-semibold">
                           {inputField.label}
                         </FormLabel>
                         <FormControl>
                           {inputField.type === "textarea" ? (
                             <textarea
-                              className="border box-border border-gray-300 resize-none rounded-md w-full px-3 py-2"
-                              placeholder={inputField.placeholder}
+                              className="border box-border border-blue-500 resize-none rounded-md w-full px-3 py-2"
                               {...field}
                             />
                           ) : (
                             <Input
+                              className="border box-border border-blue-500 "
                               type={inputField.type}
-                              placeholder={inputField.placeholder}
                               {...field}
                             />
                           )}
@@ -625,11 +681,20 @@ export default function Home() {
               </form>
             </Form>
           </div>
+          <div className="order-1 md:order-2 w-full min-h-86 sm:max-h-[26rem] flex justify-center items-center box-border">
+            <div className="rounded-full max-w-[18rem] md:max-w-none h-[95%] aspect-square border-[.8rem] border-blue-500 overflow-hidden">
+              <img
+                className="w-full h-full object-cover object-top"
+                src="/images/help-desk-5.jpg"
+                alt="help-desk-photo"
+              />
+            </div>
+          </div>
         </div>
       </section>
       {/* END FORM */}
 
-      <section className="w-full px-2 pb-16 md:px-12 text-center relative grid grid-cols-1 md:grid-cols-[50%_50%] place-items-start">
+      <section className="animate w-full px-2 pb-16 md:px-12 text-center relative grid grid-cols-1 md:grid-cols-[50%_50%] place-items-start">
         <img
           className="absolute -z-10 opacity-10 w-full h-96 left-0 -top-40"
           src="/images/deco-3.svg"
