@@ -229,14 +229,13 @@ export default function Home() {
     elements.forEach((element) => {
       gsap.fromTo(
         element,
-        { opacity: 0, y: 80 },
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
-          duration: 1.2,
           scrollTrigger: {
             trigger: element,
-            start: "top 60%",
+            start: "top 80%",
             end: "top 20%",
             toggleActions: "play none none none",
           },
@@ -247,11 +246,11 @@ export default function Home() {
       const plans = element.querySelectorAll(".animate-plan");
       gsap.fromTo(
         plans,
-        { opacity: 0, x: 50 },
+        { opacity: 0, y: 50 },
         {
           opacity: 1,
-          x: 0,
-          duration: 1,
+          y: 0,
+          duration: 0.8,
           ease: "power2.out",
           stagger: 0.5,
           delay: 0.5,
@@ -263,17 +262,58 @@ export default function Home() {
           },
         }
       );
+
+      const animateAboutLeft = element.querySelectorAll(".animate-about-left");
+      gsap.fromTo(
+        animateAboutLeft,
+        { opacity: 0, x: -50 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1,
+          ease: "power2.out",
+          delay: 0.5,
+          scrollTrigger: {
+            trigger: element,
+            start: "top 80%",
+            end: "top 20%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      const animateAboutRight = element.querySelectorAll(
+        ".animate-about-right"
+      );
+      gsap.fromTo(
+        animateAboutRight,
+        { opacity: 0, x: 50 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1,
+          ease: "power2.out",
+          delay: 0.5,
+          scrollTrigger: {
+            trigger: element,
+            start: "top 80%",
+            end: "top 20%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
       const testimonials = element.querySelectorAll(".animate-testimonial");
       gsap.fromTo(
         testimonials,
-        { opacity: 0, x: 80 },
+        { opacity: 0, x: 50 },
         {
           opacity: 1,
           x: 0,
           duration: 1,
           stagger: 0.5,
           ease: "power2.out",
-          delay: 1,
+          delay: 0.5,
           scrollTrigger: {
             trigger: element,
             start: "top 80%",
@@ -424,13 +464,13 @@ export default function Home() {
             <div className="mt-12 flex gap-5">
               <Button
                 variant="ghost"
-                className="bg-slate-800 h-12 w-32 text-lg"
+                className="bg-slate-800 h-12 w-32 text-lg active:translate-y-1"
               >
                 Amet
               </Button>
               <Button
                 variant="ghost"
-                className="text-slate-800 bg-white h-12 w-32 text-lg"
+                className="text-slate-800 bg-white h-12 w-32 text-lg active:translate-y-1"
               >
                 Nirit
               </Button>
@@ -451,7 +491,7 @@ export default function Home() {
         {/* END HERO SECTION */}
       </div>
 
-      <section className="w-full relative">
+      <section className="w-full relative overflow-hidden">
         {aboutUs.map((about, index) => (
           <section
             key={index}
@@ -465,7 +505,9 @@ export default function Home() {
             <div
               className={clsx(
                 "w-full text-slate-800 p-6 lg:p-10",
-                index === 1 ? "order-2 md:order-1" : "order-2 md:order-2"
+                index === 1
+                  ? "animate-about-left  order-2 md:order-1"
+                  : "animate-about-right  order-2 md:order-2"
               )}
             >
               <h2 className="text-3xl font-semibold mb-8 lg:text-4xl">
@@ -478,7 +520,9 @@ export default function Home() {
             <div
               className={clsx(
                 "w-full flex justify-center",
-                index === 1 ? " order-1 md:order-2" : " order-1 md:order-1"
+                index === 1
+                  ? "animate-about-right order-1 md:order-2"
+                  : "animate-about-left order-1 md:order-1"
               )}
             >
               <img
@@ -524,9 +568,7 @@ export default function Home() {
               key={index}
               className={clsx(
                 "animate-plan w-12/12 sm:w-10/12 h-full text-white flex flex-col justify-center md:justify-between md:p-3",
-                index === 1
-                  ? "bg-slate-800 md:scale-105 md:shadow-2xl"
-                  : "bg-blue-500"
+                index === 1 ? "bg-slate-800" : "bg-blue-500"
               )}
             >
               <div>
@@ -545,7 +587,7 @@ export default function Home() {
                   <Button
                     variant="ghost"
                     className={clsx(
-                      "text-slate-800 bg-white h-12 w-32 text-lg",
+                      "text-slate-800 bg-white h-12 w-32 text-lg active:translate-y-1",
                       index === 1
                         ? "hover:bg-blue-500 hover:text-white"
                         : "hover:bg-slate-800 hover:text-white"
@@ -583,7 +625,7 @@ export default function Home() {
                       <AvatarFallback></AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="w-[7.5rem] h-[1.5rem] relative">
+                      <div className="w-[7.5rem] h-[1.5rem] relative bg-gray-200">
                         <div
                           className="bg-yellow-500 h-[1.5rem] absolute z-0"
                           style={{ width: `${card.rating}%` }}
@@ -615,7 +657,7 @@ export default function Home() {
         </div>
       </section>
       {/* FORM  */}
-      <section className="animate w-full pt-8 pb-32">
+      <section className="animate w-full pt-8 pb-32  overflow-hidden">
         <h1 className="w-full text-5xl font-bold pb-32  text-center relative">
           <img
             className="absolute opacity-10 -z-10 w-full h-80 -top-24"
@@ -625,7 +667,7 @@ export default function Home() {
           Contact Us
         </h1>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 px-8 place-content-center">
-          <div className=" order-2 md:order-1 mt-16 md:mt-0 flex flex-col justify-center px-8">
+          <div className="animate-about-left order-2 md:order-1 w-full max-w-[25rem] mx-auto mt-16 md:mt-0 flex flex-col justify-center">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -673,7 +715,7 @@ export default function Home() {
                 ))}
                 <Button
                   variant="ghost"
-                  className="bg-slate-800 text-white h-12 w-32 text-base"
+                  className="bg-slate-800 text-white h-12 w-32 text-base active:translate-y-1"
                   type="submit"
                 >
                   Submit
@@ -681,7 +723,7 @@ export default function Home() {
               </form>
             </Form>
           </div>
-          <div className="order-1 md:order-2 w-full min-h-86 sm:max-h-[26rem] flex justify-center items-center box-border">
+          <div className="animate-about-right order-1 md:order-2 w-full min-h-86 sm:max-h-[26rem] flex justify-center items-center box-border">
             <div className="rounded-full max-w-[18rem] md:max-w-none h-[95%] aspect-square border-[.8rem] border-blue-500 overflow-hidden">
               <img
                 className="w-full h-full object-cover object-top"
