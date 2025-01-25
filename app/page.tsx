@@ -451,7 +451,7 @@ export default function Home() {
         {/* HERO SECTION */}
         <section className="w-full pt-2 pb-16 px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 place-items-center relative">
           <div className="w-full text-white order-2 2xs:px-8 md:order-1">
-            <h1 className="hero-h1-font-size leading-none text-opacity-90 font-semibold md:leading-tight">
+            <h1 className="text-[11vw] md:text-[5vw] lg:text-[5.5vw] leading-none text-opacity-90 font-semibold md:leading-tight">
               Lorem Ipsum Dolor Set Amet
             </h1>
             <h3
@@ -602,7 +602,7 @@ export default function Home() {
         </div>
       </section>
       <section className="animate py-32 text-slate-800">
-        <h1 className="w-full text-5xl font-bold pb-32  text-center relative">
+        <h1 className="w-full text-[14vw] 2xs:text-5xl font-bold pb-32  text-center relative">
           <img
             className="absolute opacity-10 -z-10 w-full h-80 -top-24"
             src="/images/deco-3.svg"
@@ -615,11 +615,11 @@ export default function Home() {
           {testimonialsCards.map((card, index) => (
             <Card
               key={index}
-              className="animate-testimonial w-12/12 md:w-[20rem] md:flex-shrink-0 shadow-2xl  flex flex-col justify-center sm:justify-between md:p-2"
+              className="animate-testimonial w-12/12 sm:w-10/12 mx-auto md:w-[20rem] md:flex-shrink-0 shadow-2xl  flex flex-col justify-center sm:justify-between md:px-2 md:py-4"
             >
               <CardHeader className="mb-5">
                 <CardTitle className="mb-8">
-                  <div className="flex justify-between items-end">
+                  <div className="flex flex-col space-y-4 md:flex-row justify-between md:items-end ">
                     <Avatar className="w-24 h-24">
                       <AvatarImage src={card.photo} className="object-cover" />
                       <AvatarFallback></AvatarFallback>
@@ -649,7 +649,7 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
 
-              <CardContent className="text-lg font-bold mb-2 py-0">
+              <CardContent className="text-lg font-bold mb-2 pb-4">
                 <p>{card.name}</p>
               </CardContent>
             </Card>
@@ -658,7 +658,7 @@ export default function Home() {
       </section>
       {/* FORM  */}
       <section className="animate w-full pt-8 pb-32  overflow-hidden">
-        <h1 className="w-full text-5xl font-bold pb-32  text-center relative">
+        <h1 className="w-full text-[14vw] 2xs:text-5xl font-bold pb-32  text-center relative">
           <img
             className="absolute opacity-10 -z-10 w-full h-80 -top-24"
             src="/images/deco-3.svg"
@@ -666,7 +666,7 @@ export default function Home() {
           />
           Contact Us
         </h1>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 px-8 place-content-center">
+        <div className="w-full grid grid-cols-1 md:space-x-8 md:grid-cols-2 px-8 place-content-center">
           <div className="animate-about-left order-2 md:order-1 w-full max-w-[25rem] mx-auto mt-16 md:mt-0 flex flex-col justify-center">
             <Form {...form}>
               <form
@@ -742,7 +742,7 @@ export default function Home() {
           src="/images/deco-3.svg"
           alt="background-decoration"
         />
-        <h1 className="w-full text-5xl font-bold text-center md:text-left md:py-28">
+        <h1 className="w-full text-[14vw] 2xs:text-5xl font-bold text-center md:text-left md:py-28">
           Have Questions?
         </h1>
         <section className="w-full py-16 px-2">
